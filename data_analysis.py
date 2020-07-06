@@ -29,7 +29,7 @@ def main():
         'game_data.csv',
         index_col='game_nums'
     )
-    stats = df.groupby(['human_starting_score', 'human_hit_once', 'dealer_starting_score']).agg({
+    stats = df.groupby(['human_starting_score', 'human_hit_once', 'dealer_first_card_score']).agg({
         'human_won': calc_winning_percentage,
         'human_hit_once': 'count'
     }).rename(columns={
@@ -44,7 +44,7 @@ def main():
             go.Heatmap(
                 z=tempdf['winning_percentage'],
                 x=tempdf['human_starting_score'],
-                y=tempdf['dealer_starting_score'],
+                y=tempdf['dealer_first_card_score'],
                 # hovertext=hovertext,
                 # hoverinfo='text',
                 hoverongaps=False,
@@ -58,7 +58,7 @@ def main():
         fig.update_layout(
             title='human_hit_once=' + str(human_hit_once),
             xaxis_title='human_starting_score',
-            yaxis_title='dealer_starting_score'
+            yaxis_title='dealer_first_card_score'
             # xaxis_type='category',
             # yaxis_type='category'
         )
@@ -69,7 +69,7 @@ def main():
     no_hit = stats.loc[stats['human_hit_once'] == False]
     joined = hit_once.merge(
         right=no_hit,
-        on=['human_starting_score', 'dealer_starting_score'],
+        on=['human_starting_score', 'dealer_first_card_score'],
         suffixes=['_hitonce', '_nohit']
     )
     joined['is_hit_once_better'] = joined.apply(
@@ -82,7 +82,7 @@ def main():
         go.Heatmap(
             z=joined['is_hit_once_better'],
             x=joined['human_starting_score'],
-            y=joined['dealer_starting_score'],
+            y=joined['dealer_first_card_score'],
             # hovertext=hovertext,
             # hoverinfo='text',
             hoverongaps=False,
@@ -96,7 +96,7 @@ def main():
     fig.update_layout(
         title='Is Hit Once Better?',
         xaxis_title='human_starting_score',
-        yaxis_title='dealer_starting_score'
+        yaxis_title='dealer_first_card_score'
         # xaxis_type='category',
         # yaxis_type='category'
     )
