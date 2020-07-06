@@ -77,7 +77,7 @@ def main():
     human_won = []
 
     for human_stay_threshold_ in range(2, 22, 1):
-        for game_num in range(50000):
+        for game_num in range(100000):
             deck = Deck()
             dealer = Dealer(deck)
             human = Human(deck)
@@ -85,12 +85,12 @@ def main():
             game_nums.append(game_num)
             human_stay_threshold.append(human_stay_threshold_)
 
+            human.get_card()
             dealer.get_card()
             dealer_first_card_score.append(dealer.score)
-            dealer.get_card()
 
             human.get_card()
-            human.get_card()
+            dealer.get_card()
             human_starting_score.append(human.score)
 
             while human.score < human_stay_threshold_:
