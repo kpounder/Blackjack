@@ -72,7 +72,7 @@ def main():
     human_starting_score = []
     human_final_score = []
     human_hit_once = []
-    dealer_starting_score = []
+    dealer_first_card_score = []
     dealer_final_score = []
     human_won = []
 
@@ -80,14 +80,16 @@ def main():
         deck = Deck()
         dealer = Dealer(deck)
         human = Human(deck)
-        dealer.get_card()
-        dealer.get_card()
-        human.get_card()
-        human.get_card()
 
         game_nums.append(game_num)
+
+        dealer.get_card()
+        dealer_first_card_score.append(dealer.score)
+        dealer.get_card()
+
+        human.get_card()
+        human.get_card()
         human_starting_score.append(human.score)
-        dealer_starting_score.append(dealer.score)
 
         if game_num % 2 == 0:
             human.get_card()
@@ -99,7 +101,7 @@ def main():
 
         human_final_score.append(human.score)
         dealer_final_score.append(dealer.score)
-        if dealer.score > 21 or human.score > dealer.score:
+        if dealer.score > 21 or dealer.score < human.score <= 21:
             human_won.append(True)
         else:
             human_won.append(False)
@@ -109,7 +111,7 @@ def main():
         'human_starting_score': human_starting_score,
         'human_hit_once': human_hit_once,
         'human_final_score': human_final_score,
-        'dealer_starting_score': dealer_starting_score,
+        'dealer_first_card_score': dealer_first_card_score,
         'dealer_final_score': dealer_final_score,
         'human_won': human_won
     })
