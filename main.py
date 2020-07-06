@@ -69,47 +69,48 @@ class Human(Player):
 
 def main():
     game_nums = []
+    human_stay_threshold = []
     human_starting_score = []
     human_final_score = []
-    human_hit_once = []
-    dealer_starting_score = []
+    dealer_first_card_score = []
     dealer_final_score = []
     human_won = []
 
-    for game_num in range(500000):
-        deck = Deck()
-        dealer = Dealer(deck)
-        human = Human(deck)
-        dealer.get_card()
-        dealer.get_card()
-        human.get_card()
-        human.get_card()
+    for human_stay_threshold_ in range(2, 22, 1):
+        for game_num in range(100000):
+            deck = Deck()
+            dealer = Dealer(deck)
+            human = Human(deck)
 
-        game_nums.append(game_num)
-        human_starting_score.append(human.score)
-        dealer_starting_score.append(dealer.score)
+            game_nums.append(game_num)
+            human_stay_threshold.append(human_stay_threshold_)
 
-        if game_num % 2 == 0:
             human.get_card()
-            human_hit_once.append(True)
-        else:
-            human_hit_once.append(False)
+            dealer.get_card()
+            dealer_first_card_score.append(dealer.score)
 
-        dealer.play_hand()
+            human.get_card()
+            dealer.get_card()
+            human_starting_score.append(human.score)
 
-        human_final_score.append(human.score)
-        dealer_final_score.append(dealer.score)
-        if dealer.score > 21 or human.score > dealer.score:
-            human_won.append(True)
-        else:
-            human_won.append(False)
+            while human.score < human_stay_threshold_:
+                human.get_card()
+
+            dealer.play_hand()
+
+            human_final_score.append(human.score)
+            dealer_final_score.append(dealer.score)
+            if dealer.score > 21 or dealer.score < human.score <= 21:
+                human_won.append(True)
+            else:
+                human_won.append(False)
 
     df = pd.DataFrame({
         'game_nums': game_nums,
+        'human_stay_threshold': human_stay_threshold,
         'human_starting_score': human_starting_score,
-        'human_hit_once': human_hit_once,
         'human_final_score': human_final_score,
-        'dealer_starting_score': dealer_starting_score,
+        'dealer_first_card_score': dealer_first_card_score,
         'dealer_final_score': dealer_final_score,
         'human_won': human_won
     })
